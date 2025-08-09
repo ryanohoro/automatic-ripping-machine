@@ -672,7 +672,7 @@ def makemkv(job):
         str: path to ripped files.
     """
     # confirm MKV is working, beta key hasn't expired
-    prep_mkv()
+    # prep_mkv()
     logging.info(f"Starting MakeMKV rip. Method is {job.config.RIPMETHOD}")
     # get MakeMKV disc number
     if job.drive.mdisc is None:
