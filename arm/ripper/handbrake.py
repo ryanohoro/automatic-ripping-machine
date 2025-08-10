@@ -62,7 +62,7 @@ def handbrake_main_feature(srcpath, basepath, logfile, job):
           f"-i {shlex.quote(srcpath)} " \
           f"-o {shlex.quote(filepathname)} " \
           f"--main-feature " \
-          f"--preset \"{hb_preset}\" " \
+          f"{hb_preset} " \
           f"{hb_args} " \
           f">> {logfile} 2>&1"
 
@@ -134,7 +134,7 @@ def handbrake_all(srcpath, basepath, logfile, job):
             cmd = f"nice {cfg.arm_config['HANDBRAKE_CLI']} " \
                   f"-i {shlex.quote(srcpath)} " \
                   f"-o {shlex.quote(filepathname)} " \
-                  f"--preset \"{hb_preset}\" " \
+                  f"{hb_preset} " \
                   f"-t {track.track_number} " \
                   f"{hb_args} " \
                   f">> {logfile} 2>&1"
@@ -178,6 +178,13 @@ def correct_hb_settings(job):
     elif job.disctype == "bluray":
         hb_args = job.config.HB_ARGS_BD
         hb_preset = job.config.HB_PRESET_BD
+
+    # If hb_preset ends with .json, assume it's a path to a custom preset, and set preset accordingly
+    if hb_preset.endswith(".json"):
+        hb_preset = f"--preset-import-file {shlex.quote(hb_preset)}"
+    elif hb_preset:
+        hb_preset = f"--preset \"{hb_preset}\""
+
     return hb_args, hb_preset
 
 
@@ -216,7 +223,7 @@ def handbrake_mkv(srcpath, basepath, logfile, job):
         cmd = f'nice {cfg.arm_config["HANDBRAKE_CLI"]} ' \
               f'-i {shlex.quote(srcpathname)} ' \
               f'-o {shlex.quote(filepathname)} ' \
-              f'--preset "{hb_preset}" {hb_args} >> {logfile} 2>&1'
+              f'{hb_preset} {hb_args} >> {logfile} 2>&1'
 
         logging.debug(f"Sending command: {cmd}")
 
