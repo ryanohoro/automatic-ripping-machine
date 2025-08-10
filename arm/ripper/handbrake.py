@@ -181,7 +181,9 @@ def correct_hb_settings(job):
 
     # If hb_preset ends with .json, assume it's a path to a custom preset, and set preset accordingly
     if hb_preset.endswith(".json"):
-        hb_preset = f"--preset-import-file {shlex.quote(hb_preset)}"
+        # Assumes the preset JSON has only one preset and the name is the filename without extension
+        preset_name = os.path.splitext(os.path.basename(hb_preset))[0]
+        hb_preset = f"--preset-import-file \"{shlex.quote(hb_preset)}\" --preset \"{preset_name}\""
     elif hb_preset:
         hb_preset = f"--preset \"{hb_preset}\""
 
